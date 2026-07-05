@@ -26,12 +26,18 @@ js/app.js         tab logic + rendering
 
 ## Roadmap (not built yet)
 
-- Driver profiles — career stats, current season, photo (OpenF1 `/drivers` + Jolpica `/drivers/{id}/results`)
-- Full historical archive — pick any season/round → results, back to 1950 (Jolpica)
+- Multi-season historical archive — same RESULTS/GRID tabs, but for any year back to 1950
+  (swap `current` for the year in the Jolpica URLs, add a season picker)
 - True live timing — if you ever sponsor OpenF1, add the bearer token server-side
   (e.g. a small Cloudflare Worker, same pattern as HygeiNous) and swap the `/position`
   and `/intervals` endpoints in — never put the token in client-side JS.
 - Circuit maps — OpenF1 `circuit_info_url` gives corner-by-corner track data via MultiViewer.
+
+## Built
+
+- **RESULTS** — every race this season, click to expand full finishing order
+- **GRID** — every driver this season as a card (photo, team, number), click for a profile
+  panel with points/wins/position + race-by-race results
 
 ## Notes
 
