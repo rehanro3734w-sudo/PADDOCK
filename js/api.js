@@ -31,6 +31,17 @@ async function getConstructorStandings() {
   return lists.length ? lists[0].ConstructorStandings : [];
 }
 
+async function getRaceResults(round) {
+  const data = await fetchJSON(`${JOLPICA_BASE}/current/${round}/results.json`);
+  const races = data.MRData.RaceTable.Races;
+  return races.length ? races[0].Results : [];
+}
+
+async function getDriverSeasonResults(driverId) {
+  const data = await fetchJSON(`${JOLPICA_BASE}/current/drivers/${driverId}/results.json`);
+  return data.MRData.RaceTable.Races;
+}
+
 // ----- OpenF1 -----
 
 async function getSeasonSessions(year) {
@@ -48,4 +59,17 @@ async function getSessionResult(sessionKey) {
 
 async function getSessionDrivers(sessionKey) {
   return fetchJSON(`${OPENF1_BASE}/drivers?session_key=${sessionKey}`);
+}
+
+async function getLatestDriverPhotos() {
+  // Headshots/team colours for whoever raced in the most recent session.
+  // Keyed by permanent number to cross-reference with Jolpica driver data.
+  try {
+    const drivers = await fetchJSON(`${OPENF1_BASE}/drivers?session_key=latest`);
+    const map = {};
+    drivers.forEach(d => { map[d.driver_number] = d; });
+    return map;
+  } catch (e) {
+    return {}; // photos are a nice-to-have, never block the page on this
+  }
 }
