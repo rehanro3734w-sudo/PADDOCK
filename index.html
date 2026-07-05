@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PADDOCK — Live F1 Data</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wordmark">PAD<span class="dot">•</span>DOCK</div>
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="live">LIVE</button>
+    <button class="tab-btn" data-tab="schedule">SCHEDULE</button>
+    <button class="tab-btn" data-tab="standings">STANDINGS</button>
+  </nav>
+</header>
+
+<main>
+
+  <section id="tab-live" class="tab-panel active">
+    <div id="live-content" class="loading">Reading timing tower…</div>
+  </section>
+
+  <section id="tab-schedule" class="tab-panel">
+    <div id="schedule-content" class="loading">Pulling the calendar…</div>
+  </section>
+
+  <section id="tab-standings" class="tab-panel">
+    <div class="subtabs">
+      <button class="subtab-btn active" data-sub="drivers">DRIVERS</button>
+      <button class="subtab-btn" data-sub="constructors">CONSTRUCTORS</button>
+    </div>
+    <div id="standings-content" class="loading">Totting up the points…</div>
+  </section>
+
+</main>
+
+<footer>
+  Data: <a href="https://openf1.org" target="_blank" rel="noopener">OpenF1</a> &amp;
+  <a href="https://jolpi.ca" target="_blank" rel="noopener">Jolpica-F1</a>.
+  Unofficial fan project — not affiliated with Formula 1, FIA, or Formula One Management.
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
