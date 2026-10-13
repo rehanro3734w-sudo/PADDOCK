@@ -165,15 +165,31 @@ main{ max-width: 880px; margin: 0 auto; padding: 24px 16px 64px; }
 
 /* Schedule */
 .race-card{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
   background:var(--panel);
-  padding:14px 18px;
   margin-bottom:6px;
   border-left:3px solid var(--border);
 }
+.race-card.raced{ border-left-color:var(--green); }
+.race-card.raced .head{ cursor:pointer; }
+.race-card.raced .head:hover .name{ color:var(--accent); }
 .race-card.next{ border-left-color:var(--accent); }
+.race-card .head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+}
+.race-card .chev{
+  width:16px;
+  color:var(--muted);
+  font-family:'JetBrains Mono', monospace;
+  text-align:center;
+  transition:transform .15s;
+}
+.race-card.open .chev{ transform:rotate(180deg); }
+.race-card .body{ display:none; padding:0 18px 14px; }
+.race-card.open .body{ display:block; }
 .race-card .round{
   font-family:'JetBrains Mono', monospace;
   color:var(--muted);
@@ -191,35 +207,12 @@ main{ max-width: 880px; margin: 0 auto; padding: 24px 16px 64px; }
   .tab-btn, .subtab-btn{ padding:7px 10px; font-size:0.85rem; }
   .tower-row{ grid-template-columns: 26px 4px 1fr auto; }
   .tower-row .tag{ display:none; }
-  .race-card{ flex-direction:column; align-items:flex-start; gap:6px; }
+  .race-card .head{ flex-wrap:wrap; gap:6px; }
+  .race-card .info{ flex-basis:calc(100% - 60px); }
   .race-card .when{ text-align:left; }
 }
 
-/* Results accordion */
-.result-race{
-  background:var(--panel);
-  margin-bottom:6px;
-  border-left:3px solid var(--border);
-}
-.result-race.raced{ border-left-color:var(--green); cursor:pointer; }
-.result-race.not-raced{ opacity:0.5; }
-.result-race .head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 18px;
-}
-.result-race .round{
-  font-family:'JetBrains Mono', monospace;
-  color:var(--muted);
-  font-size:0.75rem;
-  width:34px;
-}
-.result-race .name{ font-family:'Barlow Condensed', sans-serif; font-weight:600; font-size:1.1rem; flex:1; }
-.result-race .chev{ color:var(--muted); font-family:'JetBrains Mono', monospace; }
-.result-race .body{ display:none; padding: 0 18px 14px; }
-.result-race.open .body{ display:block; }
-
+/* Race result rows (shown inside an expanded schedule card) */
 .result-row{
   display:grid;
   grid-template-columns: 30px 1fr auto auto;
