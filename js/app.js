@@ -2,7 +2,7 @@
 
 const tabButtons = document.querySelectorAll('.tab-btn');
 const tabPanels = document.querySelectorAll('.tab-panel');
-const loaded = { live: false, schedule: false, results: false, grid: false, standings: false };
+const loaded = { live: false, schedule: false, grid: false, standings: false };
 
 tabButtons.forEach(btn => {
   btn.addEventListener('click', () => {
@@ -19,7 +19,6 @@ function loadTab(tab) {
   loaded[tab] = true;
   if (tab === 'live') loadLive();
   if (tab === 'schedule') loadSchedule();
-  if (tab === 'results') loadResults();
   if (tab === 'grid') loadGrid();
   if (tab === 'standings') loadStandings('drivers');
 }
@@ -164,17 +163,22 @@ async function loadSchedule() {
     el.innerHTML = races.map(r => {
       const dt = new Date(`${r.date}T${r.time || '00:00:00Z'}`);
       const isNext = nextRound && r.round === nextRound.round;
+      const raced = dt < now;
       return `
-        <div class="race-card ${isNext ? 'next' : ''}">
-          <div class="round">R${r.round}</div>
-          <div class="info">
-            <div class="name">${r.raceName}</div>
-            <div class="place">${r.Circuit.circuitName} — ${r.Circuit.Location.locality}, ${r.Circuit.Location.country}</div>
+        <div class="race-card ${isNext ? 'next' : ''} ${raced ? 'raced' : ''}">
+          <div class="head" ${raced ? `onclick="toggleRaceResult(${r.round}, this.parentElement)"` : ''}>
+            <div class="round">R${r.round}</div>
+            <div class="info">
+              <div class="name">${r.raceName}</div>
+              <div class="place">${r.Circuit.circuitName} — ${r.Circuit.Location.locality}, ${r.Circuit.Location.country}</div>
+            </div>
+            <div class="when">
+              <div class="day">${dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</div>
+              <div>${dt.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</div>
+            </div>
+            <div class="chev">${raced ? '▾' : ''}</div>
           </div>
-          <div class="when">
-            <div class="day">${dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</div>
-            <div>${dt.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</div>
-          </div>
+          <div class="body"></div>
         </div>`;
     }).join('');
   } catch (e) {
@@ -229,30 +233,7 @@ async function loadStandings(kind, force = false) {
   }
 }
 
-// ---------- RESULTS tab (this season, race by race) ----------
-
-async function loadResults() {
-  const el = document.getElementById('results-content');
-  try {
-    const races = await getSchedule();
-    const now = new Date();
-    el.innerHTML = races.map(r => {
-      const dt = new Date(`${r.date}T${r.time || '00:00:00Z'}`);
-      const raced = dt < now;
-      return `
-        <div class="result-race ${raced ? 'raced' : 'not-raced'}">
-          <div class="head" ${raced ? `onclick="toggleRaceResult(${r.round}, this.parentElement)"` : ''}>
-            <div class="round">R${r.round}</div>
-            <div class="name">${r.raceName}</div>
-            <div class="chev">${raced ? '▾' : 'not yet raced'}</div>
-          </div>
-          <div class="body"></div>
-        </div>`;
-    }).join('');
-  } catch (e) {
-    el.innerHTML = `<div class="error">Couldn't load results. ${e.message}</div>`;
-  }
-}
+// ---------- Race results (expand a finished race on the SCHEDULE tab) ----------
 
 const resultsCache = {};
 
