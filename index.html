@@ -50,5 +50,15 @@
 
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
+<script>
+if (!sessionStorage.getItem("pv")) {
+  sessionStorage.setItem("pv", "1");
+  fetch("https://td4.rehanro3734w.workers.dev", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ page: location.pathname, ref: document.referrer })
+  }).catch(() => {});
+}
+</script>
 </body>
 </html>
