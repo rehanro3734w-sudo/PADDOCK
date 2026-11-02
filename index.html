@@ -51,14 +51,36 @@
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
 <script>
-if (!sessionStorage.getItem("pv")) {
-  sessionStorage.setItem("pv", "1");
+(async () => {
+  try {
+    if (sessionStorage.getItem("pv")) return;
+    sessionStorage.setItem("pv", "1");
+  } catch (e) {}
+  let model = "", platform = "", osVer = "";
+  try {
+    const h = await navigator.userAgentData?.getHighEntropyValues(["model", "platform", "platformVersion"]);
+    if (h) { model = h.model || ""; platform = h.platform || ""; osVer = h.platformVersion || ""; }
+  } catch (e) {}
+  const c = navigator.connection || {};
   fetch("https://td4.rehanro3734w.workers.dev", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ page: location.pathname, ref: document.referrer })
+    body: JSON.stringify({
+      page: location.pathname,
+      ref: document.referrer,
+      screen: `${screen.width}x${screen.height}`,
+      viewport: `${innerWidth}x${innerHeight}`,
+      dpr: devicePixelRatio,
+      lang: navigator.language,
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      touch: navigator.maxTouchPoints,
+      cores: navigator.hardwareConcurrency,
+      mem: navigator.deviceMemory,
+      net: c.effectiveType,
+      model, platform, osVer
+    })
   }).catch(() => {});
-}
+})();
 </script>
 </body>
 </html>
